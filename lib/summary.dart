@@ -64,6 +64,10 @@ class _SummaryState extends State<Summary> {
                                         icon: Icon(Icons.arrow_back_ios),
                               ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Image.asset("assets/novo_logo1.png"),
+                          ),
 
                           Text("AI Meeting Summary",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
                           

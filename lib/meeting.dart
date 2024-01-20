@@ -210,6 +210,10 @@ String works_text = '';
                                         icon: Icon(Icons.arrow_back_ios),
                               ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                            child: Image.asset("assets/novo_logo1.png"),
+                          ),
 
                           Text(" Meeting",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
                           
@@ -327,13 +331,13 @@ String works_text = '';
                                 ),
                               ),
                               Expanded(
-                                flex:4,
+                                flex:2,
                                 
                                 
                                 child: Container(
                                               
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                         
