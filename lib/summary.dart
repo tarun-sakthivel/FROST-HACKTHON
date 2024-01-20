@@ -1,19 +1,35 @@
 import "dart:io";
 
 import  "package:flutter/material.dart";
+import "package:path_provider/path_provider.dart";
 
 import "constants.dart";
 
 String _filePath= "";
-TextEditingController summarytextController = TextEditingController(text:"hello  this is the summary of the AI");
+
 class Summary extends StatefulWidget {
-  const Summary({super.key});
+  final String summary;
+  Summary({required this.summary}) ;
+
 
   @override
-  State<Summary> createState() => _SummaryState();
+  // ignore: no_logic_in_create_state
+  State<Summary> createState() => _SummaryState(summary:summary);
 }
-
 class _SummaryState extends State<Summary> {
+  late String summary;
+  _SummaryState({required this.summary});
+  TextEditingController summarytextcontroller = TextEditingController();
+  @override
+  void initState(){
+    super.initState();
+    print("helloooooo");
+    print("summary is ${summary}");
+    summarytextcontroller.text= summary;
+    print(summarytextcontroller.text);
+    print("above");
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +74,7 @@ class _SummaryState extends State<Summary> {
                         indent: 0,
                         endIndent: 0,
                       ),
+                      Text("Click to Edit your notes!!",style:TextStyle(fontSize: 15,fontWeight: FontWeight.w400,color:const Color.fromARGB(255, 206, 206, 206))),
                       /*Expanded(
                         
                         child: Container(
@@ -95,7 +112,7 @@ class _SummaryState extends State<Summary> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 15,bottom:5),
                       child: TextField(
-                      controller: summarytextController,
+                      controller: summarytextcontroller,
                       maxLength: null,
                       maxLines:null,
                         // Allow unlimited lines in the text field
@@ -112,7 +129,7 @@ class _SummaryState extends State<Summary> {
                         child: Center(
                           child: GestureDetector(
                            onTap: (){
-                              _saveToFile();
+                              _saveToFile(context);
                               
                            },
                            child: Container(
@@ -134,8 +151,8 @@ class _SummaryState extends State<Summary> {
               ),
             )));
   }
-  /*Future<void> _saveToFile(BuildContext context) async {
-    String textToSave = summarytextController.text;
+  Future<void> _saveToFile(BuildContext context) async {
+    String textToSave = summary;
 
     if (textToSave.isNotEmpty) {
       try {
@@ -164,12 +181,8 @@ class _SummaryState extends State<Summary> {
         SnackBar(content: Text('Please enter some text')),
       );
     }
-  }*/
-  void _saveToFile(){
-    String tosave = summarytextController.text;
-    File file = File("asnwer.txt");
-    file.writeAsStringSync(tosave);
   }
+ 
    
  
 }

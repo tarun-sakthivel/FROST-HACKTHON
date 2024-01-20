@@ -1,6 +1,8 @@
 
 import 'package:camera/camera.dart';
 import  "package:flutter/material.dart";
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import 'constants.dart';
 import "main.dart";
@@ -9,12 +11,9 @@ import "summary.dart";
 bool yes = false;
 
 bool ispressed = false;
-bool micon = true;
+bool micon = false;
 bool cameraon = true;
 
-
-late String formattedTime;
-int cameraside = 1;
 
 
 
@@ -32,7 +31,21 @@ class Meeting extends StatefulWidget {
 }
 
 class _MeetingState extends State<Meeting> {
-  
+  late String formattedTime;
+int cameraside = 1;
+String finaltext = "hello";
+String works_text = '';
+  TextEditingController _textController =
+      TextEditingController(); //creating object for the class
+  String _filePath = '';
+  List<String> List_text = [];
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
+  bool _isListening = false;
+  List<String> uniqueSentences = [];
+  String lastRecognizedWords = '';
+  String livewords = "";
   
 
   
@@ -44,6 +57,8 @@ class _MeetingState extends State<Meeting> {
     //initSpeech();
     
     super.initState();
+    _initSpeech();
+    micon = false;
     DateTime now = DateTime.now();
 
   // Format the current time as a string (HH:mm:ss)
@@ -78,7 +93,68 @@ class _MeetingState extends State<Meeting> {
     
     
     }
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
 
+  void _startListening() async {
+    print("listening");
+    if (_isListening) {
+      print("now started");
+      _isListening = true;
+      while (_isListening) {
+        await _speechToText.listen(
+          onResult: _onSpeechResult,
+          localeId: 'en-IN',
+        );
+      }
+      
+    }
+    setState(() {
+      _isListening = true;
+      _startListening();
+    });
+  }
+
+  void _stopListening() async {
+    
+      _isListening = false;
+      await _speechToText.stop();
+      setState(() {});
+    
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      livewords = result.recognizedWords;
+      print(result.recognizedWords);
+      List_text.add(result.recognizedWords);
+      if (result.finalResult) {
+        String recognizedWords = result.recognizedWords;
+
+        if (recognizedWords != lastRecognizedWords) {
+          if (!uniqueSentences.contains(recognizedWords)) {
+            setState(() {
+              uniqueSentences.add(recognizedWords);
+            });
+          }
+          lastRecognizedWords = recognizedWords;
+        }
+      }
+      setState(() {
+        _textController.text=uniqueSentences.join(' ');
+        finaltext= uniqueSentences.join(' ');//contains whole teachers transcript
+      print("===============================${finaltext}");
+      });
+      setState(() {
+        
+      });
+      
+     
+      _isListening = true;
+    });
+  }
   
 
 
@@ -187,6 +263,7 @@ class _MeetingState extends State<Meeting> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Container(
+                                          height:double.infinity,
                                             
                                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                                             child:ClipRect(child:Image.asset("assets/No_camera.png",height: 300,))),
@@ -205,13 +282,18 @@ class _MeetingState extends State<Meeting> {
                                   width: 10,
                                 ),
                                   Expanded(
-                                   flex:1,
-                                  child: Container(
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
-                                    color: Kappcolor),
-                                    
-                                    
+                                   
+                                  child:
+                
+                
+                                Container(
+                                  height:double.infinity,
+                                  decoration: BoxDecoration(color: Kappcolor,borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("$livewords",style:TextStyle(fontFamily: "Inter",fontSize: 20,fontWeight: FontWeight.w500)),
                                   ),
+                                )   
                                 ),
                               ],
                             ),
@@ -260,6 +342,12 @@ class _MeetingState extends State<Meeting> {
                                               
                                 setState(() {
                                   micon= !micon;
+                                  if (micon == true){
+                                    _startListening();
+                                  }
+                                  else if (micon ==false){
+                                    _stopListening();
+                                  }
                                 });
                               },
                                child: micon? CircleAvatar(
@@ -312,7 +400,7 @@ class _MeetingState extends State<Meeting> {
                                             onSurface: Colors.yellow,),
                                             onPressed: (){
                                               //ONPREWSED
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Summary()));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Summary(summary: livewords,)));
                                              
                                         
                                           },
@@ -367,3 +455,15 @@ class _MeetingState extends State<Meeting> {
     );
   }
 
+class TextContainer extends StatelessWidget {
+  final String finaltext;
+
+  TextContainer({required this.finaltext});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(finaltext, style: TextStyle(fontSize: 50)),
+    );
+  }
+}
