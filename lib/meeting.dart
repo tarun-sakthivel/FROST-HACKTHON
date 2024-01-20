@@ -180,9 +180,27 @@ class _MeetingState extends State<Meeting> {
                                 Expanded(
                                   flex:3,
                                   
-                                  child: yes ?Text("Camera off!") :Container(
+                                  child: yes ?Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color:Kappcolorlight),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                                            child:ClipRect(child:Image.asset("assets/No_camera.png",height: 300,))),
+                                            Text("Your Camera is off!",style:Kcommontextstyle)
+                                      ],
+                                    ),
+                                  )
+                                      
+                                      :Container(
                                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                                    child: CameraPreview(cameraController))),
+                                    child: Container(
+                                      
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                                      child:ClipRect(child:CameraPreview(cameraController))))),
                                 SizedBox(
                                   width: 10,
                                 ),
