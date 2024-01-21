@@ -1,14 +1,18 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_interface/welcomepage.dart';
 
-import "upload.dart";
+import 'firebase_options.dart';
 //create a cameras varriable
 late List<CameraDescription>  cameras ;
+
 
 void main() async{
   
   
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   try{
   cameras = await availableCameras();
   }
@@ -30,9 +34,7 @@ class MainApp extends StatelessWidget {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Upload(
-
-        ),
+        body: Welcomepage(),
       ),
     );
   }
