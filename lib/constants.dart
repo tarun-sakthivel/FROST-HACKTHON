@@ -14,3 +14,5 @@ TextStyle Kcommontextstyle = const TextStyle(fontFamily: "Inter",fontSize: 20,fo
 Color  Kappcolor = const Color.fromARGB(255, 255, 225, 159);
 Color  Kappcolorlight = Color.fromARGB(255, 255, 251, 244);
 String referencetext = "";
+const Color kContainercolor =  Color.fromARGB(255, 40, 40, 40);
+const Color kWelcompagebutton = Color.fromARGB(255, 235, 235, 235);
