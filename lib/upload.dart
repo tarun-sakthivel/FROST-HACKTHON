@@ -1,5 +1,6 @@
 
 import  "package:flutter/material.dart";
+import "package:meet_interface/welcomepage.dart";
 
 import 'constants.dart';
 import "meeting.dart";
@@ -88,6 +89,8 @@ TextEditingController _referencetextcontroller = TextEditingController();
                             child: IconButton(onPressed: (){
 
                               //Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Welcomepage()));
                             },
                                         icon: Icon(Icons.arrow_back_ios),
                               ),
