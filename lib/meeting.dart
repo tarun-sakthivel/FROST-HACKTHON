@@ -1,6 +1,7 @@
 
 import 'package:camera/camera.dart';
 import  "package:flutter/material.dart";
+import 'package:meet_interface/upload.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -201,15 +202,7 @@ String works_text = '';
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
-                            child: IconButton(onPressed: (){
-
-                              //Navigator.pop(context);
-                            },
-                                        icon: Icon(Icons.arrow_back_ios),
-                              ),
-                          ),
+                          
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                             child: Image.asset("assets/novo_logo1.png"),
@@ -404,7 +397,7 @@ String works_text = '';
                                             onSurface: Colors.yellow,),
                                             onPressed: (){
                                               //ONPREWSED
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Summary(summary: livewords,)));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Summary(summary: "$livewords \n\n\n $referencetext",)));
                                              
                                         
                                           },
@@ -419,7 +412,21 @@ String works_text = '';
                                               
                                   ],
                                 ),
-                              ))
+                              )),
+                              GestureDetector(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Upload()));
+                                },
+                                child: Container(
+                                  height:50,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color:const Color.fromARGB(255, 229, 229, 229)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(child: Text("Edit the reference Material")),
+                                  ),
+                                ),
+                              )
                               
                             ],
                           ),

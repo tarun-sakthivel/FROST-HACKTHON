@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import "meeting.dart";
+import "upload.dart";
 //create a cameras varriable
 late List<CameraDescription>  cameras ;
 
@@ -30,7 +30,7 @@ class MainApp extends StatelessWidget {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Meeting(
+        body: Upload(
 
         ),
       ),

@@ -13,3 +13,4 @@ TextStyle Ktitletextstyle = const TextStyle(fontFamily: "Inter",fontSize: 30,fon
 TextStyle Kcommontextstyle = const TextStyle(fontFamily: "Inter",fontSize: 20,fontWeight:FontWeight.w500);
 Color  Kappcolor = const Color.fromARGB(255, 255, 225, 159);
 Color  Kappcolorlight = Color.fromARGB(255, 255, 251, 244);
+String referencetext = "";

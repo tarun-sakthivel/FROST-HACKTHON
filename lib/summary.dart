@@ -69,7 +69,7 @@ class _SummaryState extends State<Summary> {
                             child: Image.asset("assets/novo_logo1.png"),
                           ),
 
-                          Text("AI Meeting Summary",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
+                          Text("Enhanced Notes",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
                           
                         ],
                       ),
