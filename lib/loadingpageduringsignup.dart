@@ -13,7 +13,7 @@ class LoadingPagesignup extends StatefulWidget {
   _LoadingPagesignupState createState() => _LoadingPagesignupState();
   late String emailtext;
   late String passwordtext;
-  LoadingPagesignup({required this.emailtext, required this.passwordtext});
+  LoadingPagesignup({super.key, required this.emailtext, required this.passwordtext});
 }
 
 class _LoadingPagesignupState extends State<LoadingPagesignup> {
@@ -27,7 +27,7 @@ class _LoadingPagesignupState extends State<LoadingPagesignup> {
 Widget build(BuildContext context){
   return Scaffold(
     backgroundColor: Kbackgroundcolor,
-    body: Center (child : CircularProgressIndicator(),),);
+    body: const Center (child : CircularProgressIndicator(),),);
   
 }
 
@@ -41,24 +41,15 @@ Future<void> createaccount(BuildContext context, String email, String password) 
     final newUser = await _auth.createUserWithEmailAndPassword(
         email: email, password: password);
 
-    if (newUser != null) {
-      print("Registered correctly");
-      Navigator.pop(context);
-      
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Upload()));
-    } else {
-      print("this is else part");
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  ErrorDialog(title: "Error", content: "There is an Error")));
-    }
-  } catch (e) {
+    print("Registered correctly");
+    Navigator.pop(context);
+    
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const Upload()));
+    } catch (e) {
     Navigator.push(
         context,
         MaterialPageRoute(

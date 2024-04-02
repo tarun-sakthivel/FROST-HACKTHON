@@ -5,6 +5,8 @@ import "package:meet_interface/upload.dart";
 import "Signup.dart";
 import "constants.dart";
 class Login extends StatefulWidget{
+  const Login({super.key});
+
 
   @override
   _LoginState createState() => _LoginState();
@@ -31,15 +33,15 @@ class _LoginState extends State<Login>{
             
             Container(
             height:450,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: kContainercolor,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50),bottomRight: Radius.circular(50))
             ),
             child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
                   child: Text("Login",style:TextStyle(color: Colors.white,fontSize: 55,fontFamily: "Pacifico")),
                 ),
 
@@ -66,14 +68,14 @@ class _LoginState extends State<Login>{
                 if (user != null){
                   print("everthying went well");
                   Navigator.pop(context);
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Upload()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const Upload()));
                   //Navigator.push(context,MaterialPageRoute(builder: (context)=>Info_loader()));
                   emailcontroller.clear();
                   
                   passwordcontroller.clear();
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ErrorDialog(title: "Congrulation", content: " You Successfully Logged In")));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ErrorDialog(title: "Congrulation", content: " You Successfully Logged In")));
                 }else{
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ErrorDialog(title: "Error", content: " ")));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ErrorDialog(title: "Error", content: " ")));
                 }
               }
               catch(e){
@@ -95,13 +97,13 @@ class _LoginState extends State<Login>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?",style:TextStyle(color: const Color.fromARGB(255, 198, 198, 198))),
+                  const Text("Don't have an account?",style:TextStyle(color: Color.fromARGB(255, 198, 198, 198))),
       
                   TextButton(onPressed: (){
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Signup()));
                   },
-                  child: Text("Sign up",style: TextStyle(color:Colors.blue),))
+                  child: const Text("Sign up",style: TextStyle(color:Colors.blue),))
                 ],
               ),
             ),

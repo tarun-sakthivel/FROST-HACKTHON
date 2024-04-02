@@ -1,244 +1,224 @@
-import "dart:convert";
-import "dart:io";
-
-import  "package:flutter/material.dart";
+import 'dart:convert';
+import 'dart:io';
+import 'upload.dart';
+import 'package:meet_interface/constants.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import "package:path_provider/path_provider.dart";
 
-import "constants.dart";
-
-String _filePath= "";
+String _filePath = "";
 
 class Summary extends StatefulWidget {
   final String summary;
-  Summary({required this.summary}) ;
-
+  final String pdffile;
+  const Summary({super.key, required this.summary, required this.pdffile});
 
   @override
   // ignore: no_logic_in_create_state
-  State<Summary> createState() => _SummaryState(summary:summary);
+  State<Summary> createState() => _SummaryState(summary: summary);
 }
+
 class _SummaryState extends State<Summary> {
   late String summary;
+
   _SummaryState({required this.summary});
   TextEditingController summarytextcontroller = TextEditingController();
+  String? _fileName;
+  FilePickerResult? result;
+  PlatformFile? pickedfile;
+  bool isLOading = false;
+  File? fileToDisplay;
+  List pickedfiles = [];
+  String pathofFile = '';
+  String sumarized_text = '';
+  String base64String = '';
+  String manual_text = '';
+  void pickFile() async {
+    try {
+      result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['ppt', 'pdf'],
+          allowMultiple: true);
+      if (result != null) {
+        _fileName = result!.files.first.name;
+        pickedfile = result!.files.first;
+        fileToDisplay = File(pickedfile!.path.toString());
+        pathofFile = pickedfile!.path.toString();
+        print("File name: $_fileName");
+        base64String = base64Encode(File(pathofFile).readAsBytesSync());
+      }
+      if (result != null) {
+        setState(() {
+          pickedfiles = result!.files.map((file) => File(file.path!)).toList();
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  openFile(File) {
+    OpenFile.open(File.path);
+  }
+
+  Future fetchData() async {
+    print("hi");
+    var url = 'https://karthiksagar.us-east-1.modelbit.com/v1/run_model/latest';
+    var headers = {'Content-Type': 'application/json'};
+    print(base64String);
+    var body = json.encode({
+      "data": [base64String, summary],
+    });
+    print("stage2");
+    var response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print("success");
+      // Request successful, do something with the response.
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      // Access the value of the "response" key
+      String botResponse = jsonResponse['data'];
+      // Print or return the bot response
+      print("Bot response: $botResponse");
+      setState(() {
+        sumarized_text = botResponse;
+        summarytextcontroller.text = sumarized_text;
+
+        print(summarytextcontroller.text);
+      });
+      setState(() {
+        isLOading = true;
+      });
+      return botResponse;
+    } else {
+      // Request failed, handle error.
+      print('Request failed with status: ${response.statusCode}');
+    }
+  }
+
+  Future<File> saveFilePermanently(PlatformFile file) async {
+    final appStorage = await getApplicationDocumentsDirectory();
+    final newFile = File('${appStorage.path}/${file.name}');
+    return File(file.path!).copy(newFile.path);
+  }
+
   @override
-  void initState(){
+  void initState() {
+    fetchData();
     super.initState();
     print("helloooooo");
-    print("summary is ${summary}");
-    summarytextcontroller.text=
-    "  1 - Plants act as nature's chefs, utilizing sunlight for their own food.\n"
-    "  2 - Chloroplasts, like culinary factories, contain chlorophyll, the key ingredient.\n\n"
+    print("summary is $summary");
 
-    
-    "  3 - Sunlight powers the production of energy-rich molecules.\n"
-    "   4- Chlorophyll captures sunlight, initiating the process.\n\n"
-
-    
-    "  5 - Carbon dioxide transforms into glucose.\n"
-    "   6- This stage occurs in the chloroplast's stroma.\n\n"
-
-   
-    "  7 - The process releases oxygen as a byproduct.\n"
-    "  8 - Essential for sustaining life on Earth.\n\n"
-
-    
-    "  9 - Plants are akin to solar panels, capturing sunlight for energy.\n"
-    "  10 - Chloroplasts function as tiny factories with chlorophyll as a special ingredient.\n\n"
-
-   
-    "  11 - Photosynthesis involves two main stages – light-dependent and light-independent.\n"
-    "  12 - Light-dependent reactions produce ATP and NADPH using energized electrons.\n\n"
-
-    
-;
-    print(summarytextcontroller.text);
     print("above");
-
-    print("======================prediction============================");
-    makePrediction("n Havana, after a storm, a car embedded in a wall reveals a woman's body, identified as the housekeeper for the new Portuguese ambassador. The narrator recalls Frau Frieda, a dream interpreter in Vienna, whose prophetic dreams led him to leave the city years ago. In Barcelona, the narrator encounters Frau Frieda again, now wealthy, having taken over the fortune of her former patrons. Pablo Neruda dismisses her dreams, but she persists. Thirteen years later, the narrator hears of her through a snake ring found on a victim in Havana, leaving her fate uncertain.");
-
-
-
-
-
-    
-
-
   }
 
-
-  Future<void> makePrediction(String transcript) async {
-  final response = await http.post(
-    Uri.parse('http://127.0.0.1:5000/predict'),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode(<String, String>{
-      'transcript': transcript,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    Map<String, dynamic> data = jsonDecode(response.body);
-    String prediction = data['prediction'];
-    // Handle the prediction in your Flutter app
-    print('Prediction: $prediction');
-  } else {
-    // Handle errors
-    print('Error: ${response.reasonPhrase}');
-  }
-}
-  
   @override
   Widget build(BuildContext context) {
-    if (summarytextcontroller.text.isEmpty){
+    if (isLOading)
       return Scaffold(
-        backgroundColor: Kbackgroundcolor,
-      body:Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Expanded(
-              
-              child: Container(
-                height: double.infinity,
-                
-                decoration: BoxDecoration(color: Kmainboard,borderRadius: KMyborder,),
-
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
-                            child: IconButton(onPressed: (){
-
-                              Navigator.pop(context);
-                            },
-                                        icon: Icon(Icons.arrow_back_ios),
-                              ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: Image.asset("assets/novo_logo1.png"),
-                          ),
-
-                          Text("Enhanced Notes",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
-                          
-                        ],
-                      ),
-                      
-                      Divider(
-                        indent: 0,
-                        endIndent: 0,
-                      ),])))))
-
-      );
-    }
-    return Scaffold(
-     
-      backgroundColor: Kbackgroundcolor,
-      body:Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Expanded(
-              
-              child: Container(
-                height: double.infinity,
-                
-                decoration: BoxDecoration(color: Kmainboard,borderRadius: KMyborder,),
-
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
-                            child: IconButton(onPressed: (){
-
-                              Navigator.pop(context);
-                            },
-                                        icon: Icon(Icons.arrow_back_ios),
-                              ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: Image.asset("assets/novo_logo1.png"),
-                          ),
-
-                          Text("Enhanced Notes",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
-                          
-                        ],
-                      ),
-                      
-                      Divider(
-                        indent: 0,
-                        endIndent: 0,
-                      ),
-                      Text("Click to Edit your notes!!",style:TextStyle(fontSize: 15,fontWeight: FontWeight.w400,color:const Color.fromARGB(255, 206, 206, 206))),
-                      
-
-
-                      Container(
-                  height:500,
-                  width: double.infinity,
-                  decoration: BoxDecoration(borderRadius: KMyborder,color: Kgreycolor_light,),
-                  
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15,bottom:5),
-                      child: TextField(
-                      controller: summarytextcontroller,
-                      maxLength: null,
-                      maxLines:null,
-                        // Allow unlimited lines in the text field
-                      decoration: InputDecoration(
-                        border: InputBorder.none, // Remove default border
-                        hintText: 'Here...',
-                      ),
-                        ),
+          backgroundColor: Kbackgroundcolor,
+          body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Expanded(
+                child: Container(
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Kmainboard,
+                    borderRadius: KMyborder,
                   ),
-                ),
-                    
-                      Padding(
-                        padding: const EdgeInsets.only(top:30),
-                        child: Center(
-                          child: GestureDetector(
-                           onTap: (){
-                              _saveToFile(context);
-                              
-                           },
-                           child: Container(
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color:Kappcolor),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(Icons.arrow_back_ios),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: Image.asset("assets/novo_logo1.png"),
+                              ),
+                              const Text("Enhanced Notes",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                          const Divider(
+                            indent: 0,
+                            endIndent: 0,
+                          ),
+                          const Text("Click to Edit your notes!!",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromARGB(255, 206, 206, 206))),
+                          Container(
+                            height: 500,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: KMyborder,
+                              color: Kgreycolor_light,
+                            ),
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text("Save to File"),
-                            )),
-                        
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 5),
+                              child: TextField(
+                                controller: summarytextcontroller,
+                                maxLength: null,
+                                maxLines: null,
+                                // Allow unlimited lines in the text field
+                                decoration: const InputDecoration(
+                                  border:
+                                      InputBorder.none, // Remove default border
+                                  hintText: 'Here...',
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      )
-                      
-
-                    ]
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  _saveToFile(context);
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: Kappcolor),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Text("Save to File"),
+                                    )),
+                              ),
+                            ),
+                          )
+                        ]),
                   ),
                 ),
-                
-              ),
-            )));
+              )));
+    return Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
   }
+
   Future<void> _saveToFile(BuildContext context) async {
     String textToSave = summary;
 
@@ -246,7 +226,6 @@ class _SummaryState extends State<Summary> {
       try {
         Directory directory = await getApplicationDocumentsDirectory();
         String filePath = '$directory/my_text_file.txt';
-      
 
         File file = File(filePath);
         await file.writeAsString(textToSave);
@@ -256,21 +235,18 @@ class _SummaryState extends State<Summary> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Text saved to file')),
+          const SnackBar(content: Text('Text saved to file')),
         );
       } catch (e) {
         print('Error saving to file: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving to file')),
+          const SnackBar(content: Text('Error saving to file')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter some text')),
+        const SnackBar(content: Text('Please enter some text')),
       );
     }
   }
- 
-   
- 
 }

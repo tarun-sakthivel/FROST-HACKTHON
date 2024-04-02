@@ -6,11 +6,11 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 void main() {
-  runApp(MyHomePage());
+  runApp(const MyHomePage());
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -22,13 +22,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScrollController _scrollController = ScrollController();
 
   String works_text = '';
-  TextEditingController _textController =
+  final TextEditingController _textController =
       TextEditingController(); //creating object for the class
   String _filePath = '';
   List<String> List_text = [];
-  SpeechToText _speechToText = SpeechToText();
+  final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
-  String _lastWords = '';
+  final String _lastWords = '';
   bool _isListening = false;
 
   @override
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Speech Demo'),
+          title: const Text('Speech Demo'),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -104,18 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
+                  padding: const EdgeInsets.all(16),
+                  child: const Text(
                     'Recognized words:',
                     style: TextStyle(fontSize: 20.0),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
                     // If listening is active show the recognized words
                     _speechToText.isListening
-                        ? '$_lastWords'
+                        ? _lastWords
                         // If listening isn't active but could be tell the user
                         // how to start it, otherwise indicate that speech
                         // recognition is not yet ready or not supported on
@@ -130,14 +130,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   controller: _textController,
                   maxLines: null, // Allow multiple lines of text
-                  decoration: InputDecoration(labelText: 'Enter your script'),
+                  decoration: const InputDecoration(labelText: 'Enter your script'),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _saveToFile,
-                  child: Text('Save to File'),
+                  child: const Text('Save to File'),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text('File Path: $_filePath'),
               ],
             ),
@@ -168,17 +168,17 @@ class _MyHomePageState extends State<MyHomePage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Text saved to file')),
+          const SnackBar(content: Text('Text saved to file')),
         );
       } catch (e) {
         print('Error saving to file: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving to file')),
+          const SnackBar(content: Text('Error saving to file')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter some text')),
+        const SnackBar(content: Text('Please enter some text')),
       );
     }
   }

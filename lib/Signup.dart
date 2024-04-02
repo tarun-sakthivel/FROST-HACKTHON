@@ -7,6 +7,8 @@ import "login.dart";
 
 
 class Signup extends StatefulWidget{
+  const Signup({super.key});
+
 
   @override
   
@@ -36,15 +38,15 @@ class _Signup extends State<Signup>{
             
             Container(
             height:450,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: kContainercolor,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50),bottomRight: Radius.circular(50))
             ),
             child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Text("Sign up",style:TextStyle(color: Colors.white,fontSize: 55,fontFamily: "Pacifico")),
                 ),
                 entrytext(controller: usernamecontroller,hint:"UserName",secure:false),
@@ -78,13 +80,13 @@ class _Signup extends State<Signup>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Already have an account?",style:TextStyle(color: const Color.fromARGB(255, 198, 198, 198))),
+                  const Text("Already have an account?",style:TextStyle(color: Color.fromARGB(255, 198, 198, 198))),
       
                   TextButton(onPressed: (){
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const Login()));
                   },
-                  child: Text("Login",style: TextStyle(color:Colors.blue),))
+                  child: const Text("Login",style: TextStyle(color:Colors.blue),))
                 ],
               ),
             ),
@@ -114,7 +116,7 @@ class ErrorDialog extends StatelessWidget {
       content: Text(content),
       actions: [
         ElevatedButton(
-          child: Text('OK'),
+          child: const Text('OK'),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -127,7 +129,7 @@ class ErrorDialog extends StatelessWidget {
   final String hint;
   final bool secure;
 
-  entrytext({required this.controller,required this.hint,required this.secure});
+  const entrytext({super.key, required this.controller,required this.hint,required this.secure});
   
 
   @override
@@ -136,7 +138,7 @@ class ErrorDialog extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
       child: TextField(
         
-        style:TextStyle(color: Colors.white,fontFamily: "Commmissioner"),
+        style:const TextStyle(color: Colors.white,fontFamily: "Commmissioner"),
         obscureText:secure ,
         controller: controller,
       decoration: InputDecoration(
@@ -146,28 +148,28 @@ class ErrorDialog extends StatelessWidget {
         border: OutlineInputBorder(
           
           borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide(color: Color.fromARGB(255, 138, 138, 138)), // Rounded border
+          borderSide: const BorderSide(color: Color.fromARGB(255, 138, 138, 138)), // Rounded border
         ),
 
 
         //ENABLED BORDER
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide(color: Color.fromARGB(255, 101, 101, 101)), // Rounded border
+          borderSide: const BorderSide(color: Color.fromARGB(255, 101, 101, 101)), // Rounded border
         ),
 
 
         //FOCUSED BORDER
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide(color: Color.fromARGB(255, 204, 204, 204)), // Rounded border
+          borderSide: const BorderSide(color: Color.fromARGB(255, 204, 204, 204)), // Rounded border
         ),
 
 
         //HINT TEXT
         hintText: hint,
-        hintStyle: TextStyle(
-          color: const Color.fromARGB(255, 79, 79, 79),
+        hintStyle: const TextStyle(
+          color: Color.fromARGB(255, 79, 79, 79),
           fontFamily: "Commissioner",
         ),
       ),
@@ -181,7 +183,7 @@ class CustomButton extends StatelessWidget {
   final Color colours;
   final String text;
 
-  CustomButton({required this.onPressed,required this.colours,required this.text});
+  const CustomButton({super.key, required this.onPressed,required this.colours,required this.text});
 
   @override
   Widget build(BuildContext context) {

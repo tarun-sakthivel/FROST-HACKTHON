@@ -5,6 +5,8 @@ import 'Signup.dart';
 import "constants.dart";
 import "login.dart";
 class Welcomepage extends StatefulWidget{
+  const Welcomepage({super.key});
+
 
   @override
   _WelcomepageState createState()=> _WelcomepageState();
@@ -12,7 +14,7 @@ class Welcomepage extends StatefulWidget{
 
 
 class _WelcomepageState extends State<Welcomepage>with TickerProviderStateMixin {
-  bool _isLoggedIn= true;
+  final bool _isLoggedIn= true;
   
   
 
@@ -27,10 +29,10 @@ class _WelcomepageState extends State<Welcomepage>with TickerProviderStateMixin 
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children:[
-              Text("NOVO",style:TextStyle(fontSize: 50,
+              const Text("NOVO",style:TextStyle(fontSize: 50,
               fontWeight: FontWeight.w600,
             
-              color: const Color.fromARGB(255, 205, 205, 205))),
+              color: Color.fromARGB(255, 205, 205, 205))),
               
       
               Padding(
@@ -57,7 +59,7 @@ class _WelcomepageState extends State<Welcomepage>with TickerProviderStateMixin 
             height:300,
             width: double.infinity,
             
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: kContainercolor,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(50),topRight: Radius.circular(50))
             ),
@@ -71,15 +73,15 @@ class _WelcomepageState extends State<Welcomepage>with TickerProviderStateMixin 
               children: [
                 CustomButton(onPressed: (){
                   Navigator.pop(context);
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Login()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const Login()));
                 }, colours: kWelcompagebutton
                 , text: "Login"),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 CustomButton(onPressed: (){
                 Navigator.pop(context);
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Signup()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const Signup()));
                 }, colours: kWelcompagebutton
                 , text: "Signup"),
               ],

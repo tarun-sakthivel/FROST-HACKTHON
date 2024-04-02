@@ -1,253 +1,347 @@
+import 'dart:convert';
 
-import  "package:flutter/material.dart";
+import "package:flutter/material.dart";
+import 'package:flutter/widgets.dart';
 import "package:meet_interface/welcomepage.dart";
-
+import 'dart:io';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'constants.dart';
 import "meeting.dart";
+
 bool yes = false;
 
 bool ispressed = false;
 bool micon = false;
 bool cameraon = true;
 
-
-
-
-
-
-
 class Upload extends StatefulWidget {
-  
-
   const Upload({Key? key}) : super(key: key);
-  
 
   @override
   State<Upload> createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
-  
-  
-TextEditingController _referencetextcontroller = TextEditingController();
-  
-  
-  
-  
-  @override
-  void initState(){
-    //initSpeech();
-    
-    super.initState();
-    
-    
+  final TextEditingController _referencetextcontroller =
+      TextEditingController();
+  String? _fileName;
+  FilePickerResult? result;
+  PlatformFile? pickedfile;
+  bool isLOading = false;
+  File? fileToDisplay;
+  String pathofFile = '';
+  List pickedfiles = [];
+  String base64String = '';
+  String manual_text =
+      "'Projectile motion refers to the motion of an object that is projected into the air and then allowed to move under the influence of gravity. It is a classic example of two-dimensional motion. During projectile motion, the object follows a curved path known as a trajectory. The trajectory consists of two components: horizontal motion and vertical motion. The horizontal motion remains constant, while the vertical motion is influenced by gravity. The object reaches its maximum height at the peak of its trajectory before descending back to the ground. The time of flight, maximum height, and range of the projectile can be calculated using specific equations derived from the principles of kinematics. Projectile motion is utilized in various real-world scenarios, such as sports, engineering, and physics experiments. Understanding projectile motion is essential for predicting the behavior of objects in flight and designing effective systems and structures';";
+  void pickFile() async {
+    try {
+      setState(() {
+        isLOading = true;
+      });
+
+      result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['ppt', 'pdf'],
+          allowMultiple: true);
+      if (result != null) {
+        _fileName = result!.files.first.name;
+        pickedfile = result!.files.first;
+        fileToDisplay = File(pickedfile!.path.toString());
+        pathofFile = pickedfile!.path.toString();
+        print("File name: $_fileName");
+        base64String = base64Encode(File(pathofFile).readAsBytesSync());
+      }
+      if (result != null) {
+        setState(() {
+          pickedfiles = result!.files.map((file) => File(file.path!)).toList();
+        });
+      }
+
+      setState(() {
+        isLOading = false;
+      });
+    } catch (e) {
+      print(e);
     }
-  
-  
+  }
 
+  openFile(File) {
+    OpenFile.open(File.path);
+  }
 
-  
+  Future<File> saveFilePermanently(PlatformFile file) async {
+    final appStorage = await getApplicationDocumentsDirectory();
+    final newFile = File('${appStorage.path}/${file.name}');
+    return File(file.path!).copy(newFile.path);
+  }
+
   //speech to text part
-   
 
-
-    
-
-
-  
-  
   @override
   Widget build(BuildContext context) {
-   
-    
-    
-    return Scaffold(
-     
-      backgroundColor: Kbackgroundcolor,
-      body:Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Expanded(
-              
-              child: Container(
-                height: double.infinity,
-                
-                decoration: BoxDecoration(color: Kmainboard,borderRadius: KMyborder,),
-
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
+    return MaterialApp(
+      home: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
+                        child: IconButton(
+                          onPressed: () {
+                            //Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Welcomepage()));
+                          },
+                          icon: const Icon(Icons.arrow_back_ios),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                        child: Image.asset("assets/novo_logo1.png"),
+                      ),
+                      const Text(" Uploads",
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                  const Divider(
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  Container(
+                    child: Row(children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 0),
-                            child: IconButton(onPressed: (){
-
-                              //Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Welcomepage()));
-                            },
-                                        icon: Icon(Icons.arrow_back_ios),
+                          const Text(
+                              "Upload the reference text for notes generation"),
+                          /*TextField(
+                            controller: _referencetextcontroller,
+                            style: TextStyle(),
+                            decoration: InputDecoration(
+                              
+                              hintText: 'Place the reference text here',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            ),
+                          ),*/
+
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            height: 380.0, width: 620,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 237, 237, 237),
+                            ), // Set the desired height
+                            child: TextField(
+                              controller: _referencetextcontroller,
+                              style: const TextStyle(),
+                              maxLines:
+                                  null, // Allows for an unlimited number of lines
+                              decoration: const InputDecoration(
+                                hintText: 'Place the reference text here',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12.0, horizontal: 16.0),
+                              ),
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                            child: Image.asset("assets/novo_logo1.png"),
-                          ),
-
-                          Text(" Uploads",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600)),
-                          
-                        ],
-                      ),
-                      
-                      Divider(
-                        indent: 0,
-                        endIndent: 0,
-                      ),
-                      
-                      Expanded(
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex:2,
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                            padding:
+                                const EdgeInsets.only(top: 25.0, bottom: 25.0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Upload the reference text for notes generation")  ,  
-                                  /*TextField(
-                                    controller: _referencetextcontroller,
-                                    style: TextStyle(),
-                                    decoration: InputDecoration(
-                                      
-                                      hintText: 'Place the reference text here',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                                        borderSide: BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                                        borderSide: BorderSide(color: Colors.blue),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                                    ),
-                                  ),*/
-                                  Container(
-                                                            
-                                height: 500.0,  
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color:Color.fromARGB(255, 237, 237, 237),),// Set the desired height
-                                child: SingleChildScrollView(
-                                  child: TextField(
-                                    controller: _referencetextcontroller,
-                                    style: TextStyle(),
-                                    maxLines: null,  // Allows for an unlimited number of lines
-                                    decoration: InputDecoration(
-                                      hintText: 'Place the reference text here',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                                        borderSide: BorderSide(color: Colors.transparent),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.transparent),
-                                      
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                                    borderSide: BorderSide(color: Colors.transparent),
-                                  ),
-                                      contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                                    ),
-                                  ),
-                                ),
-                                                      ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
                                   GestureDetector(
-                                    onTap: (){
-                                      referencetext=  _referencetextcontroller.text;
-                                      print("=========================REFERENE TEXT IS ============================\n$referencetext");
+                                    onTap: () {
+                                      referencetext =
+                                          _referencetextcontroller.text;
+                                      print(
+                                          "=========================REFERENE TEXT IS ============================\n$referencetext");
                                       Navigator.pop(context);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Meeting()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Meeting(
+                                                    pdffile: base64String,
+                                                  )));
                                     },
                                     child: Container(
-                                      height:50,
-                                      width:200,
-                                      decoration: BoxDecoration(borderRadius:BorderRadius.circular(30),color:Colors.red),
-                                      child:Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(child: Text("Start Meeting",style:TextStyle(fontFamily: "inter",fontSize: 20,color:Colors.white))),
+                                      height: 50,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.red),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                            child: Text("Start Meeting",
+                                                style: TextStyle(
+                                                    fontFamily: "inter",
+                                                    fontSize: 20,
+                                                    color: Colors.white))),
                                       ),
-                                      ),
-                                      
-                                   
                                     ),
-                                  
-                              
-                                                        ],),
-                              ),
-                             Expanded(
-                              flex:1,
-                              child: Image(image: AssetImage("assets/reference.png"))),
-                            
-                            ],
+                                  ),
+                                  SizedBox(
+                                    width: 100,
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: const Size(60, 50),
+                                          maximumSize: Size(210, 55),
+                                          backgroundColor:
+                                              Color.fromARGB(255, 0, 106, 255)),
+                                      onPressed: () {
+                                        pickFile();
+                                      },
+                                      child: const Text(
+                                        "upload file",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      )),
+                                ]),
                           ),
-                          
-                        ),
-                      )
-
-                    ]
+                          if (pickedfile != null)
+                            pickedfiles.isNotEmpty
+                                ? Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.picture_as_pdf),
+                                        Text(
+                                          'File: ${pickedfile!.path}',
+                                          style: const TextStyle(
+                                              fontSize: 16, color: Colors.blue),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 0, top: 5),
+                        child: const Image(
+                          image: AssetImage("assets/reference.png"),
+                          height: 310.11,
                         ),
                       ),
-                              
-               
+                    ]),
                   ),
-                ),
-                
+                ],
               ),
-       
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
-
-
-
-  void showErrorDialog(BuildContext context, String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Error"),
-          content: Text(errorMessage),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+void showErrorDialog(BuildContext context, String errorMessage) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Error"),
+        content: Text(errorMessage),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 class TextContainer extends StatelessWidget {
   final String finaltext;
 
-  TextContainer({required this.finaltext});
+  const TextContainer({super.key, required this.finaltext});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(finaltext, style: TextStyle(fontSize: 50)),
+      child: Text(finaltext, style: const TextStyle(fontSize: 50)),
     );
   }
 }
+
+returnLogo(file) {
+  var ex = extension(file.path);
+  if (ex == 'ppt') {
+    return const Icon(Icons.pause_presentation);
+  }
+  if (ex == 'pdf') {
+    return const Icon(Icons.picture_as_pdf);
+  }
+}
+/*
+Future<void> fetchData() async {
+  print("hi");
+  var url = 'https://modeldeploy-prgrybkmta-el.a.run.app/submit';
+  var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+  var body = {};
+
+  var response = await http.post(Uri.parse(url), headers: headers, body: body);
+
+  if (response.statusCode == 200) {
+    // Request successful, do something with the response.
+    print('Response: ${response.body}');
+  } else {
+    // Request failed, handle error.
+    print('Request failed with status: ${response.statusCode}');
+  }
+}
+*/
