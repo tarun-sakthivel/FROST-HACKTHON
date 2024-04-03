@@ -222,7 +222,8 @@ class _MeetingState extends State<Meeting> {
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
-                                                  color: Kappcolorlight),
+                                                  color: const Color.fromARGB(
+                                                      255, 186, 186, 186)),
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -266,7 +267,10 @@ class _MeetingState extends State<Meeting> {
                                       child: Container(
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                        color: Kappcolor,
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
+                                        color:
+                                            Color.fromARGB(255, 226, 226, 226),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Padding(
@@ -275,6 +279,7 @@ class _MeetingState extends State<Meeting> {
                                           style: const TextStyle(
                                               fontFamily: "Inter",
                                               fontSize: 20,
+                                              color: Colors.black,
                                               fontWeight: FontWeight.w500)),
                                     ),
                                   )),
@@ -378,26 +383,31 @@ class _MeetingState extends State<Meeting> {
                                                       color: Colors.white,
                                                     )))),
                                         const SizedBox(
-                                          width: 20,
+                                          width: 35,
                                         ),
                                         Center(
                                             child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Kappcolor,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  backgroundColor: Colors.red,
                                                   minimumSize:
-                                                      const Size(150, 65),
+                                                      const Size(115, 65),
+                                                  maximumSize: Size(135, 65),
                                                   disabledForegroundColor:
-                                                      Colors.yellow
+                                                      Color.fromARGB(
+                                                              255, 0, 0, 0)
                                                           .withOpacity(0.38),
                                                   disabledBackgroundColor:
-                                                      Colors.yellow
+                                                      Color.fromARGB(
+                                                              255, 245, 15, 15)
                                                           .withOpacity(0.12),
                                                 ),
                                                 onPressed: () {
                                                   _stopListening();
-                                                  cameraController
-                                                      .stopVideoRecording();
-                                                  dispose();
+
                                                   //ONPREWSED
                                                   Navigator.push(
                                                       context,
@@ -411,13 +421,13 @@ class _MeetingState extends State<Meeting> {
                                                               )));
                                                 },
                                                 child: const Text(
-                                                  "Finish",
+                                                  "END",
                                                   style: TextStyle(
                                                       fontFamily: "Inter",
                                                       fontSize: 20,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Colors.black),
+                                                      color: Colors.white),
                                                 ))),
                                       ],
                                     ),
@@ -435,8 +445,8 @@ class _MeetingState extends State<Meeting> {
                                   height: 50,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: const Color.fromARGB(
-                                          255, 229, 229, 229)),
+                                      color:
+                                          Color.fromARGB(255, 198, 198, 198)),
                                   child: const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Center(

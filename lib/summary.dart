@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'upload.dart';
 import 'package:meet_interface/constants.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -118,18 +116,19 @@ class _SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLOading)
+    if (isLOading) {
       return Scaffold(
           backgroundColor: Kbackgroundcolor,
           body: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Expanded(
-                child: Container(
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Kmainboard,
-                    borderRadius: KMyborder,
-                  ),
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Kmainboard,
+                  borderRadius: KMyborder,
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
@@ -214,7 +213,8 @@ class _SummaryState extends State<Summary> {
                   ),
                 ),
               )));
-    return Scaffold(
+    }
+    return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );
   }
