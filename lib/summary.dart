@@ -163,11 +163,14 @@ class _SummaryState extends State<Summary> {
                             indent: 0,
                             endIndent: 0,
                           ),
-                          const Text("Click to Edit your notes!!",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromARGB(255, 206, 206, 206))),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: const Text("Click to Edit your notes!!",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color.fromARGB(255, 188, 187, 187))),
+                          ),
                           Container(
                             height: 500,
                             width: double.infinity,
@@ -199,12 +202,31 @@ class _SummaryState extends State<Summary> {
                                   _saveToFile(context);
                                 },
                                 child: Container(
+                                    width: 145,
+                                    height: 60,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: Kappcolor),
+                                        borderRadius: BorderRadius.circular(18),
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51)),
                                     child: const Padding(
                                       padding: EdgeInsets.all(12.0),
-                                      child: Text("Save to File"),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Save to File",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.download_rounded,
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                      ),
                                     )),
                               ),
                             ),
