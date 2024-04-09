@@ -163,9 +163,9 @@ class _SummaryState extends State<Summary> {
                             indent: 0,
                             endIndent: 0,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: const Text("Click to Edit your notes!!",
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Text("Click to Edit your notes!!",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400,
@@ -199,7 +199,8 @@ class _SummaryState extends State<Summary> {
                             child: Center(
                               child: GestureDetector(
                                 onTap: () {
-                                  _saveToFile(context);
+                                  _showBottomAlertDialog(context);
+                                  //_saveToFile(context);
                                 },
                                 child: Container(
                                     width: 145,
@@ -219,10 +220,11 @@ class _SummaryState extends State<Summary> {
                                                 color: Colors.white),
                                           ),
                                           SizedBox(
-                                            width: 5,
+                                            width: 1,
                                           ),
                                           Icon(
                                             Icons.download_rounded,
+                                            size: 26,
                                             color: Colors.white,
                                           )
                                         ],
@@ -271,4 +273,33 @@ class _SummaryState extends State<Summary> {
       );
     }
   }
+}
+
+void _showBottomAlertDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.all(7.0),
+        child: Container(
+          child: AlertDialog(
+            elevation: 40,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            buttonPadding: const EdgeInsets.all(5),
+            backgroundColor: Colors.black.withOpacity(1),
+            alignment: Alignment.bottomCenter,
+            title: const Text(
+              'The file has been saved to the downloads',
+              style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  color: Color.fromARGB(255, 255, 205, 23)),
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

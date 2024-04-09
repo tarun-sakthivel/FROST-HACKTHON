@@ -207,7 +207,7 @@ class _UploadState extends State<Upload> {
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(30),
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                   255, 36, 232, 22)),
                                           child: const Padding(
                                             padding: EdgeInsets.all(8.0),

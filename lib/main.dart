@@ -4,7 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_interface/upload.dart';
-
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 
 //create a cameras varriable
@@ -30,6 +30,10 @@ void main() async {
     return;
   }
   HttpOverrides.global = MyHttpOverrides();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   runApp(const MainApp());
 }
 

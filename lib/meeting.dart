@@ -94,7 +94,7 @@ class _MeetingState extends State<Meeting> {
       while (_isListening) {
         await _speechToText.listen(
           onResult: _onSpeechResult,
-          localeId: 'en-IN',
+          localeId: 'en-UK',
         );
       }
     }
@@ -105,9 +105,11 @@ class _MeetingState extends State<Meeting> {
   }
 
   void _stopListening() async {
-    _isListening = false;
-    await _speechToText.stop();
-    setState(() {});
+    if (_isListening) {
+      _isListening = false;
+      await _speechToText.stop();
+      setState(() {});
+    }
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
@@ -269,8 +271,8 @@ class _MeetingState extends State<Meeting> {
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             color: Colors.black, width: 2),
-                                        color:
-                                            Color.fromARGB(255, 226, 226, 226),
+                                        color: const Color.fromARGB(
+                                            255, 226, 226, 226),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Padding(
@@ -323,6 +325,9 @@ class _MeetingState extends State<Meeting> {
                                       children: [
                                         GestureDetector(
                                             onTap: () {
+                                              _isListening
+                                                  ? _stopListening()
+                                                  : _startListening();
                                               setState(() {
                                                 micon = !micon;
                                                 if (micon == true) {
@@ -395,13 +400,14 @@ class _MeetingState extends State<Meeting> {
                                                   backgroundColor: Colors.red,
                                                   minimumSize:
                                                       const Size(115, 65),
-                                                  maximumSize: Size(135, 65),
+                                                  maximumSize:
+                                                      const Size(135, 65),
                                                   disabledForegroundColor:
-                                                      Color.fromARGB(
+                                                      const Color.fromARGB(
                                                               255, 0, 0, 0)
                                                           .withOpacity(0.38),
                                                   disabledBackgroundColor:
-                                                      Color.fromARGB(
+                                                      const Color.fromARGB(
                                                               255, 245, 15, 15)
                                                           .withOpacity(0.12),
                                                 ),
@@ -434,19 +440,19 @@ class _MeetingState extends State<Meeting> {
                                   )),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.push(
+                                  /*  Navigator.pop(context);
+                                 Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const Upload()));
+                                              const Upload()));*/
                                 },
                                 child: Container(
                                   height: 50,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color:
-                                          Color.fromARGB(255, 198, 198, 198)),
+                                      color: const Color.fromARGB(
+                                          255, 198, 198, 198)),
                                   child: const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Center(

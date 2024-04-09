@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-Color Kbackgroundcolor = Color.fromARGB(255, 255, 255, 255);
+Color Kbackgroundcolor = const Color.fromARGB(255, 255, 255, 255);
 Color Ksidebarcolor = const Color.fromARGB(255, 29, 29, 29);
 Color Kmainboard = const Color.fromARGB(255, 255, 255, 255);
 Color Kblacktextcolor = const Color.fromARGB(255, 29, 29, 29);
